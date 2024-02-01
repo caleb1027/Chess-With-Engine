@@ -475,7 +475,46 @@ void Bitboards::generateMoveTables() {
     }
 
     // generate knight move tables
-    
+    for(int row = 0; row < 8; ++row) {
+        for(int col = 0; col < 8; ++col) {
+            bitboard mask = 0ULL;
+            int square = row * 8 + col;
+
+            if(row - 2 >= 0) {
+                if(col - 1 >= 0) {
+                    set_bit(mask, (square - 17));
+                }
+                if(col + 1 < 8) {
+                    set_bit(mask, (square - 15));
+                }
+            }
+            if(row + 2 < 8) {
+                if(col - 1 >= 0) {
+                    set_bit(mask, (square + 15));
+                }
+                if(col + 1 < 8) {
+                    set_bit(mask, (square + 17));
+                }
+            }
+            if(col - 2 >= 0) {
+                if(row - 1 >= 0) {
+                    set_bit(mask, (square - 10));
+                }
+                if(row + 1 < 8) {
+                    set_bit(mask, (square + 6));
+                }
+            } 
+            if(col + 2 < 8) {
+                if(row - 1 >= 0) {
+                    set_bit(mask, (square - 6));
+                }
+                if(row + 1 < 8) {
+                    set_bit(mask, (square + 10));
+                }
+            }
+            
+        }
+    }
 }
 
 void Bitboards::movePiece(FastMove m) {
