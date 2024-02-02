@@ -326,7 +326,7 @@ bool Bitboards::inCheck(bool checkWhite) {
             if(get_bit((opponentBoards[Queen] | opponentBoards[Rook]), to)) {
                 return true;
             }
-            
+            if(get_bit((occupiedBlack | occupiedWhite), to)) break;
             to += dir;
         }
     }
@@ -338,7 +338,7 @@ bool Bitboards::inCheck(bool checkWhite) {
             if(get_bit((opponentBoards[Queen] | opponentBoards[Bishop]), to)) {
                 return true;
             }
-            
+            if(get_bit((occupiedBlack | occupiedWhite), to)) break;
             to += dir;
         }
     }
@@ -383,12 +383,13 @@ vector<FastMove> Bitboards::getValidMoves(bool getWhiteMoves) {
     vector<FastMove> queenMoves = getValidMovesQueen(getWhiteMoves);
     vector<FastMove> kingMoves = getValidMovesKing(getWhiteMoves);
     // concat all vectors
-    std::move(pawnMoves.begin(), pawnMoves.end(), std::back_inserter(moves)); 
-    std::move(knightMoves.begin(), knightMoves.end(), std::back_inserter(moves)); 
-    std::move(bishopMoves.begin(), bishopMoves.end(), std::back_inserter(moves)); 
-    std::move(rookMoves.begin(), rookMoves.end(), std::back_inserter(moves)); 
-    std::move(queenMoves.begin(), queenMoves.end(), std::back_inserter(moves)); 
-    std::move(kingMoves.begin(), kingMoves.end(), std::back_inserter(moves)); 
+    moves.insert(moves.end(), pawnMoves.begin(), pawnMoves.end());
+    moves.insert(moves.end(), knightMoves.begin(), knightMoves.end());
+    moves.insert(moves.end(), bishopMoves.begin(), bishopMoves.end());
+    moves.insert(moves.end(), rookMoves.begin(), rookMoves.end());
+    moves.insert(moves.end(), queenMoves.begin(), queenMoves.end());
+    moves.insert(moves.end(), kingMoves.begin(), kingMoves.end());
+
     for(size_t i = 0; i < moves.size(); ++i) {
         // check for moving into check
         Bitboards temp{*this};
@@ -512,7 +513,7 @@ void Bitboards::generateMoveTables() {
                     set_bit(mask, (square + 10));
                 }
             }
-            
+            knightMoveMasks[square] = mask;
         }
     }
 }
@@ -603,12 +604,12 @@ void Bitboards::updateNonPieceBoards() {
 
 int main() {
     Bitboards::generateMoveTables();
-    Bitboards::printBitboard(Bitboards::knightMoveMasks[b1]);
-    // Bitboards test{};
-    // test.printAsBoard();
-    // vector<FastMove> moves = test.getValidMoves(true);
-    // for(FastMove m : moves) {
-    //     cout << m.from << " " << m.to << endl;
-    // }
+    Bitboards test{};
+    test.printAsBoard();
+    vector<FastMove> moves = test.getValidMoves(true);
+    for(FastMove m : moves) {
+        cout << m.from << " " << m.to << endl;
+    }
+    cout << moves.size() << endl;
     return 0;
 }
