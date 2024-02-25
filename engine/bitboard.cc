@@ -254,8 +254,8 @@ vector<FastMove> Bitboards::getValidMovesBishop(bool getWhiteMoves) {
     
     // concat vectors of moves in each direction
     for(int dir : directions) {
-        vector<FastMove> temp = getMovesDirection(positions, occupiedByOther, getWhiteMoves, dir);
-        std::move(temp.begin(), temp.end(), std::back_inserter(moves)); 
+        vector<FastMove> temp = getMovesDirection(positions, occupiedByOther, getWhiteMoves, dir, Bishop);
+        moves.insert(moves.end(), temp.begin(), temp.end());
     }
     return moves;
 }
@@ -274,7 +274,7 @@ vector<FastMove> Bitboards::getValidMovesRook(bool getWhiteMoves) {
     // concat vectors of moves in each direction
     int directions[4] = {UP, DOWN, LEFT, RIGHT};
     for(int dir : directions) {
-        vector<FastMove> temp = getMovesDirection(positions, occupiedByOther, getWhiteMoves, dir);
+        vector<FastMove> temp = getMovesDirection(positions, occupiedByOther, getWhiteMoves, dir, Rook);
         std::move(temp.begin(), temp.end(), std::back_inserter(moves)); 
     }
     return moves;
@@ -294,7 +294,7 @@ vector<FastMove> Bitboards::getValidMovesQueen(bool getWhiteMoves) {
     // concat vectors of moves in each direction
     int directions[8] = {UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT, UP, DOWN, LEFT, RIGHT};
     for(int dir : directions) {
-        vector<FastMove> temp = getMovesDirection(positions, occupiedByOther, getWhiteMoves, dir);
+        vector<FastMove> temp = getMovesDirection(positions, occupiedByOther, getWhiteMoves, dir, Queen);
         std::move(temp.begin(), temp.end(), std::back_inserter(moves)); 
     }
     return moves;
@@ -354,19 +354,31 @@ bool Bitboards::inCheckmate(bool checkWhite) {
     return true;
 }
 
-vector<FastMove> Bitboards::getMovesDirection(bitboard positions, const bitboard &occupiedByOther, bool getWhiteMoves, int direction) {
+vector<FastMove> Bitboards::getMovesDirection(bitboard positions, const bitboard &occupiedByOther, bool getWhiteMoves, int direction, int pieceType) {
     vector<FastMove> moves;
+    bitboard boundary;
+    if(direction == UP || direction == DOWN) {
+        boundary = verticalBoundary;
+    } else if (direction == LEFT || direction == RIGHT){
+        boundary = horizontalBoundary;
+    } else {
+        boundary = horizontalBoundary | verticalBoundary;
+    }
     while(positions) {
         int square = __builtin_ctzll(positions);
         int to = square + direction;
         while(to >= 0 && to < 64) {
             if(isOccupied(getWhiteMoves, to)) break;
-            if(get_bit(occupiedByOther, to)) {
-                moves.push_back({square, to, getWhiteMoves, Bishop});
+            if(get_bit(boundary, to)) {
+                moves.push_back({square, to, getWhiteMoves, pieceType});
                 break;
             }
-            moves.push_back({square, to, getWhiteMoves, Bishop});
-            square = to;
+            if(get_bit(occupiedByOther, to)) {
+                moves.push_back({square, to, getWhiteMoves, pieceType});
+                break;
+            }
+            moves.push_back({square, to, getWhiteMoves, pieceType});
+            to += direction;
         }
         pop_bit(positions, square);
     }
@@ -516,6 +528,13 @@ void Bitboards::generateMoveTables() {
             knightMoveMasks[square] = mask;
         }
     }
+
+    for(int i = 0; i < 8; ++i) {
+        verticalBoundary |= (1ULL << i);
+        verticalBoundary |= (1ULL << (i * 8));
+        horizontalBoundary |= (1ULL << (i * 8 + 7));
+        horizontalBoundary |= (1ULL << (a1 + i));
+    }
 }
 
 void Bitboards::movePiece(FastMove m) {
@@ -605,6 +624,7 @@ void Bitboards::updateNonPieceBoards() {
 int main() {
     Bitboards::generateMoveTables();
     Bitboards test{};
+    test.movePiece({e2, e4, true, Pawn});
     test.printAsBoard();
     vector<FastMove> moves = test.getValidMoves(true);
     for(FastMove m : moves) {

@@ -62,6 +62,8 @@ class Bitboards {
         static bitboard knightMoveMasks[64];
         // precalculated move table for king
         static bitboard kingMoveMasks[64];
+        static bitboard horizontalBoundary;
+        static bitboard verticalBoundary;
         // bitboard of all occupied squares
         bitboard occupiedBlack;
         bitboard occupiedWhite;
@@ -78,7 +80,7 @@ class Bitboards {
         // if checkWhite = true, checks if white is in check
         bool inCheck(bool checkWhite);
         bool inCheckmate(bool checkWhite);
-        vector<FastMove> getMovesDirection(bitboard positions, const bitboard &occupiedByOther, bool getWhiteMoves, int direction);
+        vector<FastMove> getMovesDirection(bitboard positions, const bitboard &occupiedByOther, bool getWhiteMoves, int direction, int pieceType);
         vector<FastMove> getValidMovesPawn(bool getWhiteMoves);
         vector<FastMove> getValidMovesKnight(bool getWhiteMoves);
         vector<FastMove> getValidMovesBishop(bool getWhiteMoves);
@@ -108,5 +110,7 @@ bitboard Bitboards::pawnMoveMasks[2][64];
 bitboard Bitboards::knightMoveMasks[64];
 // precalculated move table for king
 bitboard Bitboards::kingMoveMasks[64];
+bitboard Bitboards::horizontalBoundary;
+bitboard Bitboards::verticalBoundary;
 
 #endif
