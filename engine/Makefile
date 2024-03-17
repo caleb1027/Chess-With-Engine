@@ -1,15 +1,16 @@
-CXX = g++ -std=c++20
-CXXFLAGS = -Wall -g -O -MMD
+CXX = g++ 
+CXXFLAGS = -std=c++20 -Wall -g -O -MMD
+INC=-I/D:/Eigen3
 SOURCES = $(wildcard *.cc)
 OBJECTS = ${SOURCES:.cc=.o}
 DEPENDS = ${OBJECTS:.o=.d}
-EXEC=bitboard
+EXEC=layer
 
 $(EXEC): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(EXEC)
+	$(CXX) $(CXXFLAGS) $(INC) $(OBJECTS) -o $(EXEC)
 
 %.o: %.cc 
-	$(CXX) -c -o $@ $< $(CXXFLAGS) $(LIBFLAGS)
+	$(CXX) -c $(CXXFLAGS) -o $@ $< $(LIBFLAGS)
 
 -include ${DEPENDS}
 

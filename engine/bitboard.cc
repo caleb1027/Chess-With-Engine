@@ -621,15 +621,15 @@ void Bitboards::updateNonPieceBoards() {
 }
 
 
-int main() {
-    Bitboards::generateMoveTables();
-    Bitboards test{};
-    test.movePiece({e2, e4, true, Pawn});
-    test.printAsBoard();
-    vector<FastMove> moves = test.getValidMoves(true);
-    for(FastMove m : moves) {
-        cout << m.from << " " << m.to << endl;
-    }
-    cout << moves.size() << endl;
-    return 0;
-}
+// int main() {
+//     Bitboards::generateMoveTables();
+//     Bitboards test{};
+//     test.movePiece({e2, e4, true, Pawn});
+//     test.printAsBoard();
+//     vector<FastMove> moves = test.getValidMoves(true);
+//     for(FastMove m : moves) {
+//         cout << m.from << " " << m.to << endl;
+//     }
+//     cout << moves.size() << endl;
+//     return 0;
+// }

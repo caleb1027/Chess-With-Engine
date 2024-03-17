@@ -3,18 +3,10 @@
 
 #include <eigen3/Eigen/Dense>
 #include <memory>
+#include <iostream>
 
 typedef double function(double x);
 
-double relu(double z) {
-	if (z > 0) return z;
-	else return 0;
-}
-
-double relu_deri(double z) {
-	if (z > 0) return 1;
-	else return 0;
-}
 
 // Abstract Layer Class
 
@@ -26,15 +18,25 @@ class Layer {
         Eigen::MatrixXd bias;
         int inputSize;
         int outputSize;
-        std::shared_ptr<function> activation;
-        std::shared_ptr<function> derivative;
+        double learningRate;
         std::shared_ptr <Layer> prevLayer;
+        Eigen::MatrixXd activate(Eigen::MatrixXd input);
 
-        Eigen::VectorXd activate(Eigen::VectorXd input);
+        static double relu(double z) {
+            if (z > 0) return z;
+            else return 0;
+        }
+
+        static double relu_deri(double z) {
+            if (z > 0) return 1;
+            else return 0;
+        }
+
 
     public:
+        // Input Layer Constructor
         Layer(int inputSize, int outputSize);
         // multiply weight matrix with input vector, add bias, and apply activation function
-        Eigen::VectorXd forward(Eigen::MatrixXd input);
+        Eigen::MatrixXd forward(Eigen::MatrixXd input);
 };
 #endif
