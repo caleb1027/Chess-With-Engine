@@ -7,13 +7,11 @@
 
 typedef double function(double x);
 
-
-// Abstract Layer Class
-
-
 class Layer {
+    friend class Network;
     private:
         // rows = input, col = output
+        
         Eigen::MatrixXd weights;
         Eigen::MatrixXd bias;
         int inputSize;
@@ -34,9 +32,16 @@ class Layer {
 
 
     public:
+        // a = weights * input + bias
+        Eigen::MatrixXd a;
+        // output = activation(a)
+        Eigen::MatrixXd output;
+
         // Input Layer Constructor
         Layer(int inputSize, int outputSize);
+        Layer(int numNeurons, std::shared_ptr<Layer> prevLayer);
         // multiply weight matrix with input vector, add bias, and apply activation function
-        Eigen::MatrixXd forward(Eigen::MatrixXd input);
+        void forward();
+        void updateOutputSize(int outputSize);
 };
 #endif
