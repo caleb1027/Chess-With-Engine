@@ -2,10 +2,9 @@
 using std::cout;
 using std::endl;
 
-// TODO: refactor methods lol
+// TODO: refactor methods lol, need to store half move clock for FEN
 
 // use tables to generate non-sliding moves
-// may need to check for check in a bitboard, figure out how to do that
 // 12 bitboards, one for each piece type, one for each color
 // 1 bitboard for all white pieces, one for all black pieces
 // 1 bitboard for occupied squares
@@ -177,7 +176,7 @@ vector<FastMove> Bitboards::getValidMovesPawn(bool getWhiteMoves) {
         pop_bit(positions, square);
     }
 
-    // TODO: need to account for promotion
+    // TODO: add promotion
 
     return moves;
 }
@@ -619,17 +618,3 @@ void Bitboards::updateNonPieceBoards() {
     }
 
 }
-
-
-// int main() {
-//     Bitboards::generateMoveTables();
-//     Bitboards test{};
-//     test.movePiece({e2, e4, true, Pawn});
-//     test.printAsBoard();
-//     vector<FastMove> moves = test.getValidMoves(true);
-//     for(FastMove m : moves) {
-//         cout << m.from << " " << m.to << endl;
-//     }
-//     cout << moves.size() << endl;
-//     return 0;
-// }
