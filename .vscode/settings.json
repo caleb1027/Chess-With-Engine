@@ -104,6 +104,11 @@
         "numericaldiff": "cpp",
         "openglsupport": "cpp",
         "specialfunctions": "cpp",
-        "splines": "cpp"
+        "splines": "cpp",
+        "bitset": "cpp",
+        "regex": "cpp",
+        "stack": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     }
 }

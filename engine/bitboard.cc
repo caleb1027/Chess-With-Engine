@@ -205,6 +205,29 @@ vector<FastMove> Bitboards::getValidMovesKing(bool getWhiteMoves) {
     }
 
     // account for castling
+    if(getWhiteMoves) {
+        if(whiteCastleK && !get_bit(occupiedByOwn, f1) && !get_bit(occupiedByOwn, g1)) {
+            if(!isOccupied(getWhiteMoves, f1) && !isOccupied(getWhiteMoves, g1)) {
+                moves.push_back({e1, g1, getWhiteMoves, King});
+            }
+        }
+        if(whiteCastleQ && !get_bit(occupiedByOwn, b1) && !get_bit(occupiedByOwn, c1) && !get_bit(occupiedByOwn, d1)) {
+            if(!isOccupied(getWhiteMoves, b1) && !isOccupied(getWhiteMoves, c1) && !isOccupied(getWhiteMoves, d1)) {
+                moves.push_back({e1, c1, getWhiteMoves, King});
+            }
+        }
+    } else {
+        if(blackCastleK && !get_bit(occupiedByOwn, f8) && !get_bit(occupiedByOwn, g8)) {
+            if(!isOccupied(getWhiteMoves, f8) && !isOccupied(getWhiteMoves, g8)) {
+                moves.push_back({e8, g8, getWhiteMoves, King});
+            }
+        }
+        if(blackCastleQ && !get_bit(occupiedByOwn, b8) && !get_bit(occupiedByOwn, c8) && !get_bit(occupiedByOwn, d8)) {
+            if(!isOccupied(getWhiteMoves, b8) && !isOccupied(getWhiteMoves, c8) && !isOccupied(getWhiteMoves, d8)) {
+                moves.push_back({e8, c8, getWhiteMoves, King});
+            }
+        }
+    }
     return moves;
 }
 
@@ -537,6 +560,9 @@ void Bitboards::generateMoveTables() {
 }
 
 void Bitboards::movePiece(FastMove m) {
+    // increment num moves
+    ++halfMovesTotal;
+
     // update first move
     pop_bit(firstMove, m.from);
     // update occupied squares
@@ -557,8 +583,30 @@ void Bitboards::movePiece(FastMove m) {
         validEnPassentDestinations = 0ULL;
     }
 
+    // update castling
+    if(m.isWhite) {
+        if(m.pieceType == King) {
+            whiteCastleK = false;
+            whiteCastleQ = false;
+        } else if(m.pieceType == Rook) {
+            if(m.from == a1) whiteCastleQ = false;
+            if(m.from == h1) whiteCastleK = false;
+        }
+    } else {
+        if(m.pieceType == King) {
+            blackCastleK = false;
+            blackCastleQ = false;
+        } else if(m.pieceType == Rook) {
+            if(m.from == a8) blackCastleQ = false;
+            if(m.from == h8) blackCastleK = false;
+        }
+    }
+
+    // increment half moves since capture
+    ++halfMovesSinceCapture;
     // check capture
     if(isCapture(m)) {
+        halfMovesSinceCapture = 0;
         // update piece boards
         if(m.isWhite) {
             // all bits should be off except 1

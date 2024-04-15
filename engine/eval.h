@@ -3,6 +3,8 @@
 
 #include "bitboard.h"
 #include <torch/script.h>
+#include <bitset>
+
 
 class Eval {
     private:
