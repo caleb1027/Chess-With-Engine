@@ -1,6 +1,7 @@
 #include "game.h"
 #include "players/humanplayer.h"
 #include "players/AIs.h"
+#include "engine/engine.h"
 
 using namespace std;
 
@@ -128,6 +129,14 @@ void Game::play() {
 
             board.move(m);
             updateMoveList(m);
+
+            // if Engine, update bitboards
+            if (auto engine = dynamic_cast<Engine*>(p1.get())) {
+                engine->move(m);
+            }
+            if (auto engine = dynamic_cast<Engine*>(p2.get())) {
+                engine->move(m);
+            }
             
             // handle pawn promotion
             if(board.getCell(m.newRow, m.newCol).getPiece()->getPieceType() == PieceType::Pawn

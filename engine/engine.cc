@@ -19,6 +19,11 @@ void Engine::move(Move m) {
     board.movePiece(fm);
 }
 
+char Engine::handlePawnPromotion() {
+    // temp
+    return 'Q';
+}
+
 Move Engine::getNextMove() {
     vector<FastMove> validMoves = board.getValidMoves(engineIsWhite);
     float maxEval = -1000000;
