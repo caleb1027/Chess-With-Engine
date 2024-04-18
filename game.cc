@@ -54,6 +54,8 @@ void Game::play() {
                 p1 = make_unique<HardAI>(true, this);
             } else if(player == "computer4"){
                 p1 = make_unique<BestAI>(true, this);
+            } else if(player == "engine") {
+                p1 = make_unique<Engine>(true, this);
             } else {
                 cout << "Error." << endl;
                 continue;
@@ -71,6 +73,8 @@ void Game::play() {
                 p2 = make_unique<HardAI>(false, this);
             } else if(player == "computer4"){
                 p2 = make_unique<BestAI>(false, this);
+            } else if(player == "engine") {
+                p1 = make_unique<Engine>(false, this);
             } else {
                 cout << "Error." << endl;
                 continue;
