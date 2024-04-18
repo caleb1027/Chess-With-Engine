@@ -61,6 +61,11 @@ int Eval::eval(Bitboards board) {
         // determine index of en passent
         int dest = __builtin_ctzll(board.validEnPassentDestinations);
         int row = 7 - (dest / 8);
+        if(board.whiteToMove) {
+            row -= 1;
+        } else {
+            row += 1;
+        }
         int col = dest % 8;
         int index = row * 8 + col;
         std::bitset<8> enPassent(index);

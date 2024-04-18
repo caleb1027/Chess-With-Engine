@@ -87,8 +87,6 @@ class Bitboards {
     public:
         // bitboard construct w/ default board (game start)
         Bitboards();
-        // bitboard construct w/ custom board
-        Bitboards(Board b);
         // bitboard constructor w/ FEN string
         Bitboards(string fen);
         static void printBitboard(bitboard b);
