@@ -73,7 +73,7 @@ float Engine::search(Bitboards posn, int depth, float alpha, float beta, bool ma
         for(FastMove m : posn.getValidMoves(!engineIsWhite)) {
             Bitboards newPosn{posn};
             newPosn.movePiece(m);
-            float eval = search(newPosn, depth - 1, alpha, beta, true);
+            float eval = search(newPosn, depth - 1, alpha, beta, true) * (-1 * !engineIsWhite);
             minEval = min(minEval, eval);
             beta = min(beta, eval);
             if(beta <= alpha) {
